@@ -1,0 +1,16 @@
+comparison,policy,value,change_vs_current
+same fill rate,gbm median + z * (p90 - p50),80314.10252475558,-0.3436751150801146
+same fill rate,gbm median x k,83713.54197296429,-0.3158949789085128
+same fill rate,moving average 13 + z * std,90869.39459373672,-0.2574175260055872
+same fill rate,moving average 13 x k,86794.87652107335,-0.29071438821382145
+same fill rate,repeat last week x k,122369.43070436703,0.0
+same capital,gbm median + z * (p90 - p50),0.7918834791425186,0.1519608902405749
+same capital,gbm median x k,0.7729021813262981,0.23662831785943225
+same capital,moving average 13 + z * std,0.7627756389640824,0.21218243224508943
+same capital,moving average 13 x k,0.7745392858914603,0.2156185467864915
+same capital,repeat last week x k,0.6962961457776952,0.26826670292811167
+lowest total cost,gbm median + z * (p90 - p50),112137.55967322664,-0.7884189146220079
+lowest total cost,gbm median x k,154039.17740965544,-0.7093589655237573
+lowest total cost,moving average 13 + z * std,126915.62123699783,-0.7605356762622915
+lowest total cost,moving average 13 x k,133529.77259924661,-0.7480560991415042
+lowest total cost,repeat last week x k,158573.6782991107,-0.7008032717612553

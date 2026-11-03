@@ -1,0 +1,8 @@
+rule,rows_removed
+start (raw rows),0
+sales fully cancelled within 24 hours,1410
+cancelled invoices (start with C),19494
+quantity <= 0,3457
+price <= 0,2750
+non-product stock codes,4715
+exact duplicate rows,33610
