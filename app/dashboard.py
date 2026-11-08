@@ -12,6 +12,8 @@ MODEL_POLICY = "gbm median + z * (p90 - p50)"
 COST_RATIO, HOLDING_RATE = 0.60, 0.20               # explicit assumptions, not facts from the data
 
 st.set_page_config(page_title="StockMind", layout="wide")
+from ui_style import inject_css
+inject_css()
 
 
 # ---------- helpers ----------
