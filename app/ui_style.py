@@ -178,6 +178,35 @@ div[role="tabpanel"] { animation: sm-fade-up 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 [data-testid^="stBaseButton"]:hover { transform: translateY(-2px); }
+/* sm-tabs-v2: role-based tab styling */
+[data-testid="stTabs"] [role="tablist"] {
+  gap: 4px !important;
+  max-width: 100%;
+  padding: 6px !important;
+  background: var(--sm-glass) !important;
+  border: var(--sm-glass-edge) !important;
+  border-radius: 999px !important;
+  -webkit-backdrop-filter: var(--sm-glass-blur);
+  backdrop-filter: var(--sm-glass-blur);
+  box-shadow: var(--sm-glass-shadow);
+}
+[data-testid="stTabs"] [role="tablist"] > [aria-hidden="true"] { display: none !important; }
+[data-testid="stTabs"] [role="tablist"]::before,
+[data-testid="stTabs"] [role="tablist"]::after { display: none !important; }
+[data-testid="stTabs"] [role="tab"] {
+  height: auto !important;
+  padding: 9px 18px !important;
+  font-weight: 600 !important;
+  border-radius: 999px !important;
+  border-bottom: none !important;
+  transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+[data-testid="stTabs"] [role="tab"]:hover { background: rgba(255, 255, 255, 0.55) !important; }
+[data-testid="stTabs"] [role="tab"][aria-selected="true"] {
+  color: var(--sm-accent) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.72)) !important;
+  box-shadow: inset 0 1px 0 #FFFFFF, 0 6px 16px -8px rgba(79, 70, 229, 0.55);
+}
 ::selection { background: rgba(79, 70, 229, 0.20); }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   [data-testid="stMetric"], [data-testid="stAlert"], [data-testid="stExpander"],
