@@ -3,3 +3,9 @@ __pycache__/
 data/
 .DS_Store
 reports/*_output.txt
+
+# Streamlit agent skills (environment-specific symlinks)
+.agents/skills/developing-with-streamlit
+
+# Streamlit agent skills (environment-specific symlinks)
+.agents/skills/developing-with-streamlit
