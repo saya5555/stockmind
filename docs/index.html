@@ -26,7 +26,7 @@ a{color:inherit}
 .btn:hover{transform:translateY(-2px);box-shadow:var(--sh)}
 .btn.p{color:#fff;border:0;background:linear-gradient(135deg,var(--a),color-mix(in srgb,var(--a) 55%,var(--b)))}
 .hero{padding:clamp(40px,9vw,96px) 0 28px}
-.eyebrow{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--a)}
+.eyebrow{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:color-mix(in srgb,var(--a) 55%,var(--ink))}
 h1{font-size:clamp(2.5rem,7.4vw,5.2rem);line-height:1.02;letter-spacing:-.045em;margin:.3em 0;font-weight:850;text-wrap:balance;background:linear-gradient(100deg,var(--ink) 20%,var(--a) 58%,var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
 .lead{max-width:640px;color:var(--mut);font-size:clamp(1rem,2.2vw,1.2rem);text-wrap:pretty}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0}
@@ -37,7 +37,7 @@ section{padding:clamp(28px,6vw,56px) 0}
 .card{position:relative;overflow:hidden;border-radius:22px;border:1px solid var(--edge);background:var(--card);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);box-shadow:var(--sh);padding:clamp(18px,3vw,28px)}
 .card::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(240px circle at var(--mx,50%) var(--my,0),color-mix(in srgb,var(--a) 26%,transparent),transparent 70%)}
 .card:hover::before{opacity:1}
-.glow{padding:1.5px;border-radius:24px;background:conic-gradient(from var(--ang),var(--a),var(--b),var(--c),var(--a));animation:spin 7s linear infinite}
+.glow{padding:1.5px;border-radius:24px;background:conic-gradient(from var(--ang),var(--a),var(--b),var(--c),var(--a));animation:spin 7s linear infinite}.glow>.card{background:var(--bg);-webkit-backdrop-filter:none;backdrop-filter:none}.gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}.gal figure{margin:0}.gal a{display:block;border-radius:14px;overflow:hidden;background:#fff;border:1px solid var(--line)}.gal img{display:block;width:100%;height:auto}.gal figcaption{margin-top:10px;font-size:.88rem;color:var(--mut);font-weight:600}.code{font:600 .85rem/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;background:color-mix(in srgb,var(--ink) 8%,transparent);border-radius:12px;padding:14px 16px;overflow-x:auto;white-space:pre;margin:12px 0 0}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
 .kpi .l{font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
 .kpi .n{font-size:clamp(2rem,4.6vw,2.9rem);font-weight:850;letter-spacing:-.03em;line-height:1.15}
@@ -119,6 +119,14 @@ footer{padding:36px 0 56px;color:var(--mut);font-size:.86rem;border-top:1px soli
     <div id="wape"></div>
   </div>
 </section>
+
+<section id="figures" class="rv"><span class="eyebrow">Figures</span><h2>The analysis behind the numbers</h2><p class="sub">Nine figures produced by the pipeline. Click a figure to open it full size.</p><div class="gal"><figure class="card"><a href="figures/01_weekly_units.png" target="_blank" rel="noopener"><img loading="lazy" src="figures/01_weekly_units.png" alt="Weekly units sold"></a><figcaption>Weekly units sold</figcaption></figure><figure class="card"><a href="figures/02_top_products.png" target="_blank" rel="noopener"><img loading="lazy" src="figures/02_top_products.png" alt="Top products"></a><figcaption>Top products</figcaption></figure><figure class="card"><a href="figures/03_quantity_distribution.png" target="_blank" rel="noopener"><img loading="lazy" src="figures/03_quantity_distribution.png" alt="Quantity distribution"></a><figcaption>Quantity distribution</figcaption></figure><figure class="card"><a href="figures/04_units_by_country.png" target="_blank" rel="noopener"><img loading="lazy" src="figures/04_units_by_country.png" alt="Units by country"></a><figcaption>Units by country</figcaption></figure><figure class="card"><a href="figures/05_abc_pareto.png" target="_blank" rel="noopener"><img loading="lazy" src="figures/05_abc_pareto.png" alt="ABC (Pareto) analysis"></a><figcaption>ABC (Pareto) analysis</figcaption></figure><figure class="card"><a href="figures/06_demand_classes.png" target="_blank" rel="noopener"><img loading="lazy" src="figures/06_demand_classes.png" alt="Demand classes"></a><figcaption>Demand classes</figcaption></figure><figure class="card"><a href="figures/07_baseline_wape.png" target="_blank" rel="noopener"><img loading="lazy" src="figures/07_baseline_wape.png" alt="Baseline forecast error (WAPE)"></a><figcaption>Baseline forecast error (WAPE)</figcaption></figure><figure class="card"><a href="figures/08_model_vs_baselines.png" target="_blank" rel="noopener"><img loading="lazy" src="figures/08_model_vs_baselines.png" alt="Model against baselines"></a><figcaption>Model against baselines</figcaption></figure><figure class="card"><a href="figures/09_service_vs_capital.png" target="_blank" rel="noopener"><img loading="lazy" src="figures/09_service_vs_capital.png" alt="Service level against capital"></a><figcaption>Service level against capital</figcaption></figure></div></section>
+
+<section id="dashboard" class="rv"><span class="eyebrow">Interactive dashboard</span><h2>Explore every product, not only the averages</h2><p class="sub">The Streamlit dashboard has six tabs: Overview, Data, Forecast accuracy, Product explorer, Ordering simulation, and Method and limits. It reads generated data files that are not committed to the repository, so it runs on your own machine after the pipeline has been executed.</p><div class="card"><b>Run it locally</b><pre class="code">git clone https://github.com/saya5555/stockmind.git
+cd stockmind
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run app/dashboard.py</pre><p class="sub" style="margin:12px 0 0;font-size:.86rem">The pipeline commands that generate the data files are listed in the README.</p></div></section>
 
 <section id="method" class="rv">
   <span class="eyebrow">Method</span>
