@@ -70,12 +70,13 @@ footer{padding:36px 0 56px;color:var(--mut);font-size:.86rem;border-top:1px soli
 .js .rv.in{opacity:1;transform:none}
 @media(max-width:720px){.row{grid-template-columns:1fr}.v{text-align:left}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}.js .bar{width:var(--w)}}
-</style>
+.top{position:sticky;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:50;margin:10px 0 0;padding:10px 14px;gap:12px;border-radius:999px;border:1px solid var(--edge);background:var(--card);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);box-shadow:var(--sh)}html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 84px)}.links{display:flex;flex:1;min-width:0;justify-content:center;gap:2px;overflow-x:auto;scrollbar-width:none}.links::-webkit-scrollbar{display:none}.links a{font-size:.88rem;font-weight:600;text-decoration:none;color:var(--mut);padding:7px 12px;border-radius:999px;white-space:nowrap;transition:background .2s,color .2s}.links a:hover,.links a.on{color:var(--ink);background:color-mix(in srgb,var(--a) 16%,transparent)}@media(max-width:820px){.top{flex-wrap:wrap;border-radius:24px}.links{order:3;flex-basis:100%;justify-content:flex-start}}</style>
 </head>
 <body>
 <div class="wrap">
-<header class="top rv">
+<header class="top">
   <div class="brand">Stock<b>Mind</b></div>
+  <nav class="links" aria-label="Sections"><a href="#result">Result</a><a href="#accuracy">Accuracy</a><a href="#figures">Figures</a><a href="#dashboard">Dashboard</a><a href="#method">Method</a><a href="#limits">Limits</a></nav>
   <div class="acts">
     <button class="btn" id="theme" type="button" aria-label="Toggle light and dark theme">Theme</button>
     <a class="btn p" href="https://github.com/saya5555/stockmind" target="_blank" rel="noopener">View code</a>
@@ -111,7 +112,7 @@ footer{padding:36px 0 56px;color:var(--mut);font-size:.86rem;border-top:1px soli
 </section>
 
 <section class="rv">
-  <span class="eyebrow">Forecast accuracy</span>
+  <span id="accuracy" class="eyebrow">Forecast accuracy</span>
   <h2>A modest, honest gain</h2>
   <p class="sub">WAPE on the same product-weeks for every method (lower is better). The model helps most on high-volume and lumpy products, and is about equal to a simple moving average on smooth and intermittent ones.</p>
   <div class="card">
@@ -143,7 +144,7 @@ streamlit run app/dashboard.py</pre><p class="sub" style="margin:12px 0 0;font-s
 </section>
 
 <section class="rv">
-  <span class="eyebrow">Limits</span>
+  <span id="limits" class="eyebrow">Limits</span>
   <h2>What this project does not claim</h2>
   <div class="lim">
     <div class="card"><p><b>Modest accuracy gain</b>The error improves by 2.9% overall, not by a large factor.</p></div>
@@ -192,6 +193,12 @@ if('IntersectionObserver' in window){
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){reveal(e.target);io.unobserve(e.target)}}),{threshold:.15});
   $$('.rv').forEach(el=>io.observe(el));
 }else{$$('.rv').forEach(reveal)}
+const nl=$$('.links a'),nm={};
+nl.forEach(a=>nm[a.getAttribute('href').slice(1)]=a);
+const so=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){nl.forEach(l=>l.classList.remove('on'));const l=nm[e.target.dataset.nav];if(l)l.classList.add('on')}
+}),{rootMargin:'-45% 0px -50% 0px'});
+Object.keys(nm).forEach(id=>{const el=document.getElementById(id);const s=el&&(el.tagName==='SECTION'?el:el.closest('section'));if(s){s.dataset.nav=id;so.observe(s)}});
 document.addEventListener('pointermove',e=>{
   const c=e.target.closest&&e.target.closest('.card');
   if(c){const r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px')}
