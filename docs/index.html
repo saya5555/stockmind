@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StockMind: demand forecasting and ordering decisions</title>
+<script>document.documentElement.classList.add('js')</script>
+<style>
+@property --ang{syntax:"<angle>";inherits:false;initial-value:0deg}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#F3F4FB;--ink:#0F172A;--mut:#566079;--card:rgba(255,255,255,.66);--edge:rgba(255,255,255,.78);--line:rgba(15,23,42,.09);--a:#4F46E5;--b:#14B8A6;--c:#F472B6;--sh:0 24px 50px -26px rgba(49,46,129,.4);color-scheme:light}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#090A18;--ink:#EEF0FF;--mut:#9BA4C2;--card:rgba(255,255,255,.06);--edge:rgba(255,255,255,.13);--line:rgba(255,255,255,.1);--sh:0 28px 60px -30px #000;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#090A18;--ink:#EEF0FF;--mut:#9BA4C2;--card:rgba(255,255,255,.06);--edge:rgba(255,255,255,.13);--line:rgba(255,255,255,.1);--sh:0 28px 60px -30px #000;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"SF Pro Display","Inter","Segoe UI",Roboto,sans-serif;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:-12%;z-index:-1;pointer-events:none;background:radial-gradient(38% 42% at 12% 6%,color-mix(in srgb,var(--a) 42%,transparent),transparent 70%),radial-gradient(34% 40% at 90% 4%,color-mix(in srgb,var(--b) 36%,transparent),transparent 70%),radial-gradient(40% 46% at 72% 96%,color-mix(in srgb,var(--c) 28%,transparent),transparent 70%);animation:drift 26s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3%,2%,0) scale(1.08)}}
+@keyframes spin{to{--ang:360deg}}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 clamp(16px,4vw,32px)}
+.top{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+.brand{font-weight:800;letter-spacing:-.02em;font-size:1.15rem}
+.brand b{background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.acts{display:flex;gap:10px}
+.btn{font:inherit;font-weight:600;font-size:.92rem;text-decoration:none;cursor:pointer;color:var(--ink);padding:9px 16px;border-radius:999px;border:1px solid var(--edge);background:var(--card);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.btn.p{color:#fff;border:0;background:linear-gradient(135deg,var(--a),color-mix(in srgb,var(--a) 55%,var(--b)))}
+.hero{padding:clamp(40px,9vw,96px) 0 28px}
+.eyebrow{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--a)}
+h1{font-size:clamp(2.5rem,7.4vw,5.2rem);line-height:1.02;letter-spacing:-.045em;margin:.3em 0;font-weight:850;text-wrap:balance;background:linear-gradient(100deg,var(--ink) 20%,var(--a) 58%,var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{max-width:640px;color:var(--mut);font-size:clamp(1rem,2.2vw,1.2rem);text-wrap:pretty}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0}
+.chip{font-size:.82rem;font-weight:600;padding:6px 13px;border-radius:999px;border:1px solid var(--edge);background:var(--card)}
+h2{font-size:clamp(1.6rem,3.6vw,2.4rem);letter-spacing:-.03em;margin:.2em 0 .3em;text-wrap:balance}
+section{padding:clamp(28px,6vw,56px) 0}
+.sub{color:var(--mut);max-width:680px;margin:0 0 24px}
+.card{position:relative;overflow:hidden;border-radius:22px;border:1px solid var(--edge);background:var(--card);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);box-shadow:var(--sh);padding:clamp(18px,3vw,28px)}
+.card::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(240px circle at var(--mx,50%) var(--my,0),color-mix(in srgb,var(--a) 26%,transparent),transparent 70%)}
+.card:hover::before{opacity:1}
+.glow{padding:1.5px;border-radius:24px;background:conic-gradient(from var(--ang),var(--a),var(--b),var(--c),var(--a));animation:spin 7s linear infinite}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.kpi .l{font-size:.74rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.kpi .n{font-size:clamp(2rem,4.6vw,2.9rem);font-weight:850;letter-spacing:-.03em;line-height:1.15}
+.kpi .s{font-size:.86rem;color:var(--mut)}
+.row{display:grid;grid-template-columns:minmax(150px,1.1fr) 2fr minmax(120px,.8fr);gap:14px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.n{font-weight:600;font-size:.95rem}
+.track{display:grid;gap:5px}
+.bar{display:block;height:12px;border-radius:99px;width:var(--w);background:linear-gradient(90deg,var(--a),var(--b));transition:width 1.3s cubic-bezier(.2,.8,.2,1)}
+.bar.base{height:8px;background:color-mix(in srgb,var(--mut) 45%,transparent)}
+.js .bar{width:0}
+.js .in .bar{width:var(--w)}
+.nr{font-style:normal;font-size:.8rem;color:var(--mut);border:1px dashed var(--line);border-radius:99px;padding:2px 12px;width:max-content}
+.v{font-weight:750;text-align:right;font-variant-numeric:tabular-nums}
+.v small{display:block;font-weight:500;font-size:.76rem;color:var(--mut)}
+.hi .v small{color:var(--b);font-weight:700}
+.legend{display:flex;gap:18px;font-size:.82rem;color:var(--mut);margin-bottom:6px}
+.legend i{display:inline-block;width:18px;height:6px;border-radius:9px;margin-right:6px;background:linear-gradient(90deg,var(--a),var(--b))}
+.legend i.b{background:color-mix(in srgb,var(--mut) 45%,transparent)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;list-style:none;padding:0;margin:0;counter-reset:s}
+.steps li{counter-increment:s}
+.steps li::before{content:counter(s,decimal-leading-zero);display:block;font-weight:850;font-size:1.7rem;background:linear-gradient(90deg,var(--a),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent}
+.steps b{display:block;margin:2px 0 4px}
+.steps span{color:var(--mut);font-size:.9rem}
+.lim{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.lim p{margin:0;color:var(--mut)}
+.lim b{display:block;color:var(--ink);margin-bottom:4px}
+footer{padding:36px 0 56px;color:var(--mut);font-size:.86rem;border-top:1px solid var(--line)}
+.js .rv{opacity:0;transform:translateY(20px);transition:opacity .8s,transform .8s cubic-bezier(.2,.8,.2,1)}
+.js .rv.in{opacity:1;transform:none}
+@media(max-width:720px){.row{grid-template-columns:1fr}.v{text-align:left}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}.js .bar{width:var(--w)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top rv">
+  <div class="brand">Stock<b>Mind</b></div>
+  <div class="acts">
+    <button class="btn" id="theme" type="button" aria-label="Toggle light and dark theme">Theme</button>
+    <a class="btn p" href="https://github.com/saya5555/stockmind" target="_blank" rel="noopener">View code</a>
+  </div>
+</header>
+
+<main>
+<div class="hero rv">
+  <span class="eyebrow">Demand forecasting · Ordering decisions</span>
+  <h1>Forecast demand. Decide the order. Prove it on data.</h1>
+  <p class="lead">StockMind forecasts weekly demand for each product with a prediction interval, then turns the forecast into ordering decisions and tests them with a strict time-based backtest on about one million real retail transactions.</p>
+  <div class="chips"><span class="chip">Python</span><span class="chip">Gradient boosting</span><span class="chip">Quantile forecasts</span><span class="chip">Time-based backtest</span><span class="chip">Streamlit dashboard</span></div>
+  <div class="acts"><a class="btn p" href="#result">See the result</a><a class="btn" href="#method">How it works</a></div>
+</div>
+
+<section class="rv">
+  <div class="kpis">
+    <div class="card kpi"><div class="l">Transactions</div><div class="n"><span class="cnt" data-to="1" data-pre="~" data-suf="M">~1M</span></div><div class="s">UCI Online Retail II</div></div>
+    <div class="card kpi"><div class="l">Products modelled</div><div class="n"><span class="cnt" data-to="2042">2,042</span></div><div class="s">of 4,838, covering 81% of units</div></div>
+    <div class="card kpi"><div class="l">Forecast error (WAPE)</div><div class="n"><span class="cnt" data-to="0.631" data-dec="3">0.631</span></div><div class="s">2.9% lower than the best baseline</div></div>
+    <div class="card kpi"><div class="l">Interval coverage</div><div class="n"><span class="cnt" data-to="89.7" data-dec="1" data-suf="%">89.7%</span></div><div class="s">p10 to p90 against an 80% target</div></div>
+  </div>
+</section>
+
+<section id="result" class="rv">
+  <span class="eyebrow">Headline result</span>
+  <h2>12.2% less capital for the same service level</h2>
+  <p class="sub">Ordering simulation on the last 26 weeks. Each policy is tuned until 95% of demand is served, and the table shows the capital tied up in stock.</p>
+  <div class="glow"><div class="card">
+    <div id="cap"></div>
+    <p class="sub" style="margin:14px 0 0;font-size:.86rem">Setting the safety buffer from the model’s prediction interval beats the best classical baseline. Scaling the median alone never reached 95% in the tested range. Lead time is zero and unserved demand is lost; money figures rely on stated cost assumptions and illustrate the method.</p>
+  </div></div>
+</section>
+
+<section class="rv">
+  <span class="eyebrow">Forecast accuracy</span>
+  <h2>A modest, honest gain</h2>
+  <p class="sub">WAPE on the same product-weeks for every method (lower is better). The model helps most on high-volume and lumpy products, and is about equal to a simple moving average on smooth and intermittent ones.</p>
+  <div class="card">
+    <div class="legend"><span><i></i>Model (GBM, median)</span><span><i class="b"></i>Best baseline</span></div>
+    <div id="wape"></div>
+  </div>
+</section>
+
+<section id="method" class="rv">
+  <span class="eyebrow">Method</span>
+  <h2>From raw transactions to tested decisions</h2>
+  <p class="sub">Every step is a script, every cleaning decision is logged, and the models only learn from the past.</p>
+  <ol class="steps">
+    <li class="card"><b>Clean and check</b><span>Load the raw data, check quality, inspect outliers, and log each cleaning decision.</span></li>
+    <li class="card"><b>Weekly table</b><span>Aggregate transactions into weekly units per product.</span></li>
+    <li class="card"><b>Segment</b><span>ABC (Pareto) classes and demand patterns: smooth, erratic, intermittent, lumpy.</span></li>
+    <li class="card"><b>Forecast</b><span>Simple baselines against a gradient-boosting model with p10, p50 and p90 forecasts.</span></li>
+    <li class="card"><b>Decide and test</b><span>Backtest ordering policies on the last 26 weeks and compare service level against capital.</span></li>
+    <li class="card"><b>Validate and explore</b><span>Out-of-sample check, plus a Streamlit dashboard with six tabs.</span></li>
+  </ol>
+</section>
+
+<section class="rv">
+  <span class="eyebrow">Limits</span>
+  <h2>What this project does not claim</h2>
+  <div class="lim">
+    <div class="card"><p><b>Modest accuracy gain</b>The error improves by 2.9% overall, not by a large factor.</p></div>
+    <div class="card"><p><b>Conservative intervals</b>Coverage is 89.7% against an 80% target, so buffers may be slightly larger than needed.</p></div>
+    <div class="card"><p><b>Assumed costs</b>Unit cost is 60% of the price and holding costs 20% per year. These are not in the data.</p></div>
+    <div class="card"><p><b>One retailer</b>Only 2,042 of 4,838 products are modelled, from a single retailer’s data.</p></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <p>Data: Chen, D. (2012). Online Retail II [Dataset]. UCI Machine Learning Repository. <a href="https://doi.org/10.24432/C5CG6D" target="_blank" rel="noopener">doi.org/10.24432/C5CG6D</a>. Check the license terms before reuse.</p>
+  <p>Built by Saya · <a href="https://github.com/saya5555/stockmind" target="_blank" rel="noopener">github.com/saya5555/stockmind</a> · Not affiliated with other products named StockMind.</p>
+</footer>
+</div>
+
+<script>
+(()=>{
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const fmt=n=>n.toLocaleString('en-US');
+const rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const root=document.documentElement;
+try{const t=localStorage.getItem('sm-theme');if(t)root.dataset.theme=t}catch(e){}
+$('#theme').onclick=()=>{
+  const dark=root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  const n=dark?'light':'dark';root.dataset.theme=n;
+  try{localStorage.setItem('sm-theme',n)}catch(e){}
+};
+const cap=[['GBM median + z·(p90 − p50)',410574,'−12.2% vs best baseline',1],['Moving average 13 + z·std',467386,'best classical baseline'],['Moving average 13 × k',516392,'+10.5%'],['Repeat last week × k',673467,'+44.1%'],['GBM median × k',null,'did not reach 95%']];
+$('#cap').innerHTML=cap.map(([n,v,t,h])=>`<div class="row${h?' hi':''}"><div class="n">${n}</div><div class="track">${v?`<i class="bar" style="--w:${(v/673467*100).toFixed(1)}%"></i>`:'<i class="nr">not reached</i>'}</div><div class="v">${v?fmt(v):'—'}<small>${t}</small></div></div>`).join('');
+const wp=[['All products',.631,.650],['ABC class A',.583,.602],['ABC class B',.759,.781],['ABC class C',.911,.912],['Smooth demand',.434,.433],['Erratic demand',.640,.651],['Intermittent demand',.526,.521],['Lumpy demand',.794,.850]];
+$('#wape').innerHTML=wp.map(([n,m,b])=>{
+  const d=(m/b-1)*100,t=Math.abs(d)<1?'about equal':(d<0?'−':'+')+Math.abs(d).toFixed(1)+'%';
+  return `<div class="row${d<=-1?' hi':''}"><div class="n">${n}</div><div class="track"><i class="bar" style="--w:${m*100}%"></i><i class="bar base" style="--w:${b*100}%"></i></div><div class="v">${m.toFixed(3)} <span style="font-weight:500;color:var(--mut)">vs ${b.toFixed(3)}</span><small>${t}</small></div></div>`;
+}).join('');
+const count=el=>{
+  const to=+el.dataset.to,dec=+el.dataset.dec||0,pre=el.dataset.pre||'',suf=el.dataset.suf||'';
+  const show=v=>el.textContent=pre+(dec?v.toFixed(dec):fmt(Math.round(v)))+suf;
+  if(rm){show(to);return}
+  const t0=performance.now();
+  const f=t=>{const p=Math.min(1,(t-t0)/1400);show(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};
+  requestAnimationFrame(f);
+};
+const reveal=el=>{el.classList.add('in');$$('.cnt',el).forEach(count)};
+if('IntersectionObserver' in window){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){reveal(e.target);io.unobserve(e.target)}}),{threshold:.15});
+  $$('.rv').forEach(el=>io.observe(el));
+}else{$$('.rv').forEach(reveal)}
+document.addEventListener('pointermove',e=>{
+  const c=e.target.closest&&e.target.closest('.card');
+  if(c){const r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px')}
+});
+})();
+</script>
+</body>
+</html>
