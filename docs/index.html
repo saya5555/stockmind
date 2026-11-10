@@ -107,7 +107,7 @@ footer{padding:36px 0 56px;color:var(--mut);font-size:.86rem;border-top:1px soli
   <p class="sub">Ordering simulation on the last 26 weeks. Each policy is tuned until 95% of demand is served, and the table shows the capital tied up in stock.</p>
   <div class="glow"><div class="card">
     <div id="cap"></div>
-    <p class="sub" style="margin:14px 0 0;font-size:.86rem">Setting the safety buffer from the model’s prediction interval beats the best classical baseline. Scaling the median alone never reached 95% in the tested range. Lead time is zero and unserved demand is lost; money figures rely on stated cost assumptions and illustrate the method.</p>
+    <p class="sub" style="margin:14px 0 0;font-size:.86rem">Setting the safety buffer from the model’s prediction interval beats the best classical baseline. Scaling the median alone never reached 95% in the tested range. Lead time is zero and unserved demand is lost; money figures rely on stated cost assumptions and illustrate the method. This is the in-sample view: the dial of each policy is tuned on the same 26 weeks that are evaluated, so every policy looks a little better than it would in practice. A separate out-of-sample check, with the dial fixed on earlier weeks, is in the dashboard.</p>
   </div></div>
 </section>
 

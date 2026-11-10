@@ -52,7 +52,7 @@ Each week, stock is ordered up to a target. Unsold stock is carried over, unserv
 | Moving average 13 x k | 516,392 | +10.5% |
 | Repeat last week x k | 673,467 | +44.1% |
 
-Reading: setting the safety buffer from the model's prediction interval needs 12.2% less capital than the best classical baseline for the same service level. Scaling the median alone by a multiplier does not reach 95% in the swept range, which suggests that the interval, and not only the point forecast, carries the value. Money figures depend on the stated cost assumptions and on zero lead time, so they illustrate the method.
+Reading: setting the safety buffer from the model's prediction interval needs 12.2% less capital than the best classical baseline for the same service level. Scaling the median alone by a multiplier does not reach 95% in the swept range, which suggests that the interval, and not only the point forecast, carries the value. Money figures depend on the stated cost assumptions and on zero lead time, so they illustrate the method. This is the in-sample view: the dial of each policy is tuned on the same 26 weeks that are evaluated, so every policy looks a little better than it would in practice. A separate out-of-sample check, with the dial fixed on earlier weeks, is in the dashboard.
 
 ## Cost assumptions
 
