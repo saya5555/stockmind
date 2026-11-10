@@ -12,8 +12,9 @@ MODEL_POLICY = "gbm median + z * (p90 - p50)"
 COST_RATIO, HOLDING_RATE = 0.60, 0.20               # explicit assumptions, not facts from the data
 
 st.set_page_config(page_title="StockMind", layout="wide")
-from ui_style import inject_css
+from ui_style import apply_chart_style, inject_css
 inject_css()
+apply_chart_style()
 
 
 # ---------- helpers ----------
@@ -106,7 +107,7 @@ def accuracy_tab(model_results):
     st.dataframe(wape.round(3))
     overall = wape.loc["all products"].sort_values()
     fig, ax = plt.subplots(figsize=(8, 3.5))
-    ax.bar(overall.index, overall.values, color=["tab:orange" if m == "gbm_p50" else "tab:blue" for m in overall.index])
+    ax.bar(overall.index, overall.values, color=["#4F46E5" if m == "gbm_p50" else "#B6BDD3" for m in overall.index])
     ax.set_ylabel("WAPE")
     plt.setp(ax.get_xticklabels(), rotation=20, ha="right")
     fig.tight_layout()
@@ -140,10 +141,10 @@ def product_tab(segments):
     columns[3].metric("Weeks with sales", f"{int(row['selling_weeks'])} of {int(row['active_weeks'])}")
 
     fig, ax = plt.subplots(figsize=(10, 4))
-    ax.plot(history["week"], history["units"], color="tab:blue", label="actual units")
+    ax.plot(history["week"], history["units"], color="#4F46E5", label="actual units")
     if len(forecast):
-        ax.fill_between(forecast["week"], forecast["p10"], forecast["p90"], color="tab:orange", alpha=0.25, label="p10 to p90")
-        ax.plot(forecast["week"], forecast["p50"], color="tab:orange", label="forecast (median)")
+        ax.fill_between(forecast["week"], forecast["p10"], forecast["p90"], color="#14B8A6", alpha=0.22, label="p10 to p90")
+        ax.plot(forecast["week"], forecast["p50"], color="#14B8A6", label="forecast (median)")
     ax.set_ylabel("Units per week")
     ax.legend()
     fig.tight_layout()

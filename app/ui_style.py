@@ -222,3 +222,32 @@ div[role="tabpanel"] { animation: sm-fade-up 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)
 def inject_css() -> None:
     """Inject the dashboard theme. Call once, right after st.set_page_config()."""
     st.markdown(_CSS, unsafe_allow_html=True)
+
+
+def apply_chart_style() -> None:
+    """Match matplotlib charts to the glass theme. Call once at startup."""
+    import matplotlib as mpl
+    from cycler import cycler
+
+    mpl.rcParams.update({
+        "figure.facecolor": "none",
+        "axes.facecolor": "none",
+        "savefig.facecolor": "none",
+        "savefig.transparent": True,
+        "axes.edgecolor": "#CBD2E3",
+        "axes.labelcolor": "#334155",
+        "xtick.color": "#64748B",
+        "ytick.color": "#64748B",
+        "text.color": "#0F172A",
+        "axes.spines.top": False,
+        "axes.spines.right": False,
+        "axes.grid": True,
+        "axes.axisbelow": True,
+        "grid.color": "#E3E7F2",
+        "grid.linewidth": 0.8,
+        "axes.prop_cycle": cycler(color=["#4F46E5", "#14B8A6", "#F472B6", "#38BDF8", "#F59E0B"]),
+        "lines.linewidth": 2.2,
+        "font.size": 10,
+        "legend.frameon": False,
+        "figure.dpi": 130,
+    })
